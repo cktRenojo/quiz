@@ -87,16 +87,48 @@ function maskString(str) {
   
   
 //4
-  function isValidUrl(url) {
-    const regex = /^(https?|ftp):\/\/(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?$/;
-    return regex.test(url);
-  }
-  
+  const moment = require('moment');
+const momentTimezone = require('moment-timezone');
+
+
+function updateAndFormatTime(newTime) {
+
+    const { year, month, day, hour, minute, second } = newTime;
+    if (!year || !month || !day || !hour || !minute || !second) {
+        throw new Error('All date and time components must be provided.');
+    }
+
  
-  console.log(isValidUrl('https://www.example.com'));     
-  console.log(isValidUrl('http://example.com/path/to/file')); 
-  console.log(isValidUrl('ftp://example.com/file.txt')); 
-  console.log(isValidUrl('example.com')); 
-  console.log(isValidUrl('https://example')); 
+    const japanTime = moment.tz(`${year}-${month}-${day} ${hour}:${minute}:${second}`, 'YYYY-MM-DD HH:mm:ss', 'Asia/Tokyo');
+
+    const japanTimeStringFormatted = japanTime.format('YYYY ねん MM げつ DD にち HH じ mm ふん ss びょう');
+
+
+    const londonTime = japanTime.clone().tz('Europe/London');
+    
+
+    const londonTimeStringFormatted = londonTime.format('DD.MM YYYY | HH: mm: ss');
+
+    return {
+        japanTimeString: japanTimeStringFormatted,
+        londonTimeString: londonTimeStringFormatted
+    };
+}
+
+
+const updatedTime = {
+    year: 2024,
+    month: 09,  
+    day: 17,
+    hour: 15,  
+    minute: 27,
+    second: 38
+};
+
+const times = updateAndFormatTime(updatedTime);
+
+console.log('Japan Time String:', times.japanTimeString); 
+console.log('London Time String:', times.londonTimeString); 
+
   
    
